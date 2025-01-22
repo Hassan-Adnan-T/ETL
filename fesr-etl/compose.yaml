@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  fesr_etl:
+    build: .
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./secrets:/app/secrets
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  adminer:
+    image: adminer
+    ports:
+      - "8001:8080"
+    depends_on:
+      - fesr_etl

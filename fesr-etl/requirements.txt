@@ -1,0 +1,8 @@
+pandas
+sqlalchemy
+mysql-connector-python
+python-dotenv
+sshtunnel
+paramiko
+pymysql
+flask
