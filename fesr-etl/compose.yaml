@@ -9,10 +9,45 @@ services:
       - ./secrets:/app/secrets
     environment:
       - PYTHONUNBUFFERED=1
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - etl_network
 
   adminer:
     image: adminer
     ports:
       - "8001:8080"
     depends_on:
-      - fesr_etl
+      - db
+    networks:
+      - etl_network
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: etl_summary
+      MYSQL_USER: etl_user
+      MYSQL_PASSWORD: etl_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - etl_network
+
+volumes:
+  mysql_data:
+    name: etl_mysql_data
+
+networks:
+  etl_network:
+    driver: bridge
