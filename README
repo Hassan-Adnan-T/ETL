@@ -1,1 +1,5 @@
-This is a simple ETL that extract data from a database in AWS RDS
+
+The ETL process:
+1. Extracts faculty and department data from AWS RDS
+2. Transforms the data into department summaries
+3. Loads results into a local MySQL database
